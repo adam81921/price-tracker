@@ -1,0 +1,25 @@
+{
+  "serpapi_calls": {
+    "2026-07": 3
+  },
+  "last_serpapi_run": {
+    "f1": "2026-07-06",
+    "h1": "2026-07-06"
+  },
+  "last_alerts": {
+    "f1": {
+      "date": "2026-07-06",
+      "price": 19800.0
+    },
+    "h1": {
+      "date": "2026-07-06",
+      "price": 15400.0
+    }
+  },
+  "rakuten_hotel_nos": {
+    "Hotel Sonia Otaru": 999
+  },
+  "property_tokens": {
+    "Hotel Sonia Otaru": "TOK123"
+  }
+}

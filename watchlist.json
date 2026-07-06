@@ -1,0 +1,102 @@
+{
+  "_說明": "每一筆 = 一個追蹤目標。type: flight | hotel。enabled: false 可暫停。threshold: 低於此價推播。every_n_days: SerpAPI 查詢頻率（省額度用，樂天不受限每天查）。room_keyword: regex，只追蹤名稱符合的房型/方案（需樂天來源；Google 只在有提供房型明細時過濾）。",
+
+  "watches": [
+    {
+      "id": "flight-tpe-cts-br",
+      "type": "flight",
+      "enabled": false,
+      "note": "北海道機票已開票（D9VTNE），範例保留：下次要追航班把 enabled 改 true",
+      "origin": "TPE",
+      "dest": "CTS",
+      "outbound_date": "2026-09-05",
+      "return_date": "2026-09-11",
+      "include_airlines": "BR",
+      "flight_numbers": ["BR116", "BR115"],
+      "currency": "TWD",
+      "threshold": 21000
+    },
+    {
+      "id": "hotel-sonia-otaru-0909",
+      "type": "hotel",
+      "enabled": true,
+      "note": "D5 已訂（7/27 前免費取消），降價→取消重訂",
+      "query": "Hotel Sonia Otaru 小樽",
+      "check_in": "2026-09-09",
+      "check_out": "2026-09-10",
+      "adults": 2,
+      "room_keyword": "",
+      "rakuten_hotel_no": null,
+      "currency": "JPY",
+      "threshold": 18000,
+      "every_n_days": 2
+    },
+    {
+      "id": "hotel-mimaru-sapporo-0905",
+      "type": "hotel",
+      "enabled": true,
+      "note": "D1 札幌候選（東京住過 MIMARU，公寓式親子友善）",
+      "query": "MIMARU Sapporo Station North 札幌",
+      "check_in": "2026-09-05",
+      "check_out": "2026-09-06",
+      "adults": 2,
+      "room_keyword": "",
+      "rakuten_hotel_no": null,
+      "currency": "JPY",
+      "threshold": 20000,
+      "every_n_days": 2
+    },
+    {
+      "id": "hotel-keio-plaza-sapporo-0905",
+      "type": "hotel",
+      "enabled": true,
+      "note": "D1 札幌候選（京王廣場，札幌站步行，親子方案多）",
+      "query": "Keio Plaza Hotel Sapporo",
+      "check_in": "2026-09-05",
+      "check_out": "2026-09-06",
+      "adults": 2,
+      "room_keyword": "",
+      "rakuten_hotel_no": null,
+      "currency": "JPY",
+      "threshold": 18000,
+      "every_n_days": 2
+    },
+    {
+      "id": "hotel-mimaru-sapporo-0910",
+      "type": "hotel",
+      "enabled": true,
+      "note": "D6 札幌候選",
+      "query": "MIMARU Sapporo Station North 札幌",
+      "check_in": "2026-09-10",
+      "check_out": "2026-09-11",
+      "adults": 2,
+      "room_keyword": "",
+      "rakuten_hotel_no": null,
+      "currency": "JPY",
+      "threshold": 20000,
+      "every_n_days": 2
+    },
+    {
+      "id": "hotel-keio-plaza-sapporo-0910",
+      "type": "hotel",
+      "enabled": true,
+      "note": "D6 札幌候選",
+      "query": "Keio Plaza Hotel Sapporo",
+      "check_in": "2026-09-10",
+      "check_out": "2026-09-11",
+      "adults": 2,
+      "room_keyword": "",
+      "rakuten_hotel_no": null,
+      "currency": "JPY",
+      "threshold": 18000,
+      "every_n_days": 2
+    }
+  ],
+
+  "settings": {
+    "serpapi_monthly_budget": 95,
+    "drop_alert_pct": 5,
+    "low30_alert": true,
+    "alert_cooldown_days": 3
+  }
+}

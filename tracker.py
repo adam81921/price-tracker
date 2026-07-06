@@ -380,7 +380,7 @@ def main():
 
         for src, label, price in rows:
             log('  %-22s %-40s %s' % (src, label, f'{price:,.0f}' if price == price else 'no_vacancy'))
-        all_rows += [[TODAY, w['id'], src, label,
+        all_rows += [[TODAY, w['id'], src, label.replace(',', '，'),
                       ('%.0f' % price) if price == price else '', w.get('currency', 'JPY')]
                      for src, label, price in rows]
         if rows:

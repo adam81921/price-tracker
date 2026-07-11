@@ -1,20 +1,25 @@
 {
-  "_說明": "每一筆 = 一個追蹤目標。type: flight | hotel。enabled: false 可暫停。threshold: 低於此價推播。every_n_days: SerpAPI 查詢頻率（省額度用，樂天不受限每天查）。room_keyword: regex，只追蹤名稱符合的房型/方案（需樂天來源；Google 只在有提供房型明細時過濾）。",
+  "_說明": "每一筆 = 一個追蹤目標。type: flight | hotel。enabled: false 可暫停。threshold: 低於此價推播。every_n_days: SerpAPI 查詢頻率（省額度用，樂天不受限每天查）。room_keyword: regex，只追蹤名稱符合的房型/方案（需樂天來源；Google 只在有提供房型明細時過濾）。flight 可設 adults/children/infants_on_lap/infants_in_seat 指定乘客數（門檻＝該乘客組合的來回合計票價）。notify_daily=true 每天推播現價（不受門檻/冷卻限制）；notify_daily_until=YYYY-MM-DD 到期自動停。",
 
   "watches": [
     {
       "id": "flight-tpe-oka-jx",
       "type": "flight",
       "enabled": true,
-      "note": "沖繩親子遊 2026/12/3-8，星宇直飛，尚未開票。單人來回經濟艙跌破 40000 推播",
+      "note": "沖繩親子遊 2026/12/3-8 星宇直飛，尚未開票。一家四口（2大+1兒2歲+1嬰8月）來回機票跌破 40000 推播",
       "origin": "TPE",
       "dest": "OKA",
       "outbound_date": "2026-12-03",
       "return_date": "2026-12-08",
       "include_airlines": "JX",
       "flight_numbers": ["JX870", "JX871"],
+      "adults": 2,
+      "children": 1,
+      "infants_on_lap": 1,
       "currency": "TWD",
-      "threshold": 40000
+      "threshold": 40000,
+      "notify_daily": true,
+      "notify_daily_until": "2026-07-18"
     },
     {
       "id": "flight-tpe-cts-br",

@@ -126,6 +126,10 @@ def fetch_flight(state, w):
         params['type'] = '2'
     if w.get('include_airlines'):
         params['include_airlines'] = w['include_airlines']
+    # 乘客數（預設 1 大人）；門檻即針對此組合的合計票價
+    for pk in ('adults', 'children', 'infants_in_seat', 'infants_on_lap'):
+        if w.get(pk):
+            params[pk] = str(w[pk])
     data = serpapi(state, params)
     if 'error' in data:
         raise RuntimeError('serpapi flights: ' + str(data['error']))
@@ -388,6 +392,17 @@ def main():
                 check_alerts(state, settings, w, rows)
             except Exception as e:
                 log('  alert 失敗:', e)
+
+        # 每日現價推播（notify_daily）：不受門檻/冷卻限制，到 notify_daily_until 自動停
+        if rows and w.get('notify_daily'):
+            until = w.get('notify_daily_until')
+            if not until or TODAY <= until:
+                try:
+                    _, dl, dp = min(rows, key=lambda r: (r[2] if r[2] == r[2] else 1e18))
+                    ntfy('📊 今日 %s %s %s' % (w['id'], f'{dp:,.0f}', w.get('currency', 'TWD')),
+                         '%s\n%s' % (w.get('note', ''), dl), tags='chart_with_upwards_trend')
+                except Exception as e:
+                    log('  daily push 失敗:', e)
 
     if all_rows:
         append_rows(all_rows)

@@ -14,8 +14,7 @@
       "include_airlines": "JX",
       "flight_numbers": ["JX870", "JX871"],
       "currency": "TWD",
-      "threshold": 40000,
-      "every_n_days": 3
+      "threshold": 40000
     },
     {
       "id": "flight-tpe-cts-br",
@@ -34,7 +33,7 @@
     {
       "id": "hotel-sonia-otaru-0909",
       "type": "hotel",
-      "enabled": true,
+      "enabled": false,
       "note": "D5 已訂（7/27 前免費取消），降價→取消重訂",
       "query": "Hotel Sonia Otaru 小樽",
       "check_in": "2026-09-09",
@@ -49,7 +48,7 @@
     {
       "id": "hotel-mimaru-sapporo-0905",
       "type": "hotel",
-      "enabled": true,
+      "enabled": false,
       "note": "D1 札幌候選（東京住過 MIMARU，公寓式親子友善）",
       "query": "MIMARU Sapporo Station North 札幌",
       "check_in": "2026-09-05",
@@ -64,7 +63,7 @@
     {
       "id": "hotel-keio-plaza-sapporo-0905",
       "type": "hotel",
-      "enabled": true,
+      "enabled": false,
       "note": "D1 札幌候選（京王廣場，札幌站步行，親子方案多）",
       "query": "Keio Plaza Hotel Sapporo",
       "check_in": "2026-09-05",
@@ -79,7 +78,7 @@
     {
       "id": "hotel-mimaru-sapporo-0910",
       "type": "hotel",
-      "enabled": true,
+      "enabled": false,
       "note": "D6 札幌候選",
       "query": "MIMARU Sapporo Station North 札幌",
       "check_in": "2026-09-10",
@@ -94,7 +93,7 @@
     {
       "id": "hotel-keio-plaza-sapporo-0910",
       "type": "hotel",
-      "enabled": true,
+      "enabled": false,
       "note": "D6 札幌候選",
       "query": "Keio Plaza Hotel Sapporo",
       "check_in": "2026-09-10",

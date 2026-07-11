@@ -3,6 +3,21 @@
 
   "watches": [
     {
+      "id": "flight-tpe-oka-jx",
+      "type": "flight",
+      "enabled": true,
+      "note": "沖繩親子遊 2026/12/3-8，星宇直飛，尚未開票。單人來回經濟艙跌破 40000 推播",
+      "origin": "TPE",
+      "dest": "OKA",
+      "outbound_date": "2026-12-03",
+      "return_date": "2026-12-08",
+      "include_airlines": "JX",
+      "flight_numbers": ["JX870", "JX871"],
+      "currency": "TWD",
+      "threshold": 40000,
+      "every_n_days": 3
+    },
+    {
       "id": "flight-tpe-cts-br",
       "type": "flight",
       "enabled": false,

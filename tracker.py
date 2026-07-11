@@ -399,8 +399,11 @@ def main():
             if not until or TODAY <= until:
                 try:
                     _, dl, dp = min(rows, key=lambda r: (r[2] if r[2] == r[2] else 1e18))
+                    body = '%s\n%s' % (w.get('note', ''), dl)
+                    if until and TODAY == until:
+                        body += '\n⏰ 今天是每日推播最後一天，回顧一週趨勢決定追蹤門檻。'
                     ntfy('📊 今日 %s %s %s' % (w['id'], f'{dp:,.0f}', w.get('currency', 'TWD')),
-                         '%s\n%s' % (w.get('note', ''), dl), tags='chart_with_upwards_trend')
+                         body, tags='chart_with_upwards_trend')
                 except Exception as e:
                     log('  daily push 失敗:', e)
 

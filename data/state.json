@@ -1,1 +1,14 @@
-{}
+{
+  "serpapi_calls": {
+    "2026-07": 1
+  },
+  "last_serpapi_run": {
+    "flight-tpe-oka-jx": "2026-07-11"
+  },
+  "last_alerts": {
+    "flight-tpe-oka-jx": {
+      "date": "2026-07-11",
+      "price": 14490.0
+    }
+  }
+}

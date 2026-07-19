@@ -19,7 +19,7 @@
       "currency": "TWD",
       "threshold": 40000,
       "notify_daily": true,
-      "notify_daily_until": "2026-07-18"
+      "notify_daily_until": "2026-12-02"
     },
     {
       "id": "flight-tpe-cts-br",

@@ -1,10 +1,10 @@
 {
   "serpapi_calls": {
     "2026-07": 22,
-    "2026-08": 3
+    "2026-08": 4
   },
   "last_serpapi_run": {
-    "flight-tpe-oka-jx": "2026-08-03"
+    "flight-tpe-oka-jx": "2026-08-04"
   },
   "last_alerts": {
     "flight-tpe-oka-jx": {

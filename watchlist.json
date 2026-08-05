@@ -5,8 +5,8 @@
     {
       "id": "flight-tpe-oka-jx",
       "type": "flight",
-      "enabled": true,
-      "note": "沖繩親子遊 2026/12/3-8 星宇直飛，尚未開票。一家四口（2大+1兒2歲+1嬰8月）來回機票跌破 40000 推播",
+      "enabled": false,
+      "note": "沖繩機票已開票（2026-08-05 停追）。一家四口（2大+1兒2歲+1嬰8月）TPE-OKA JX870/JX871，2026/12/3-8",
       "origin": "TPE",
       "dest": "OKA",
       "outbound_date": "2026-12-03",

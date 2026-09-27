@@ -46,13 +46,16 @@ def fetch_direct_price():
     stub = types.ModuleType('fast_flights.fallback_playwright')
     stub.fallback_playwright_fetch = lambda *a, **k: (_ for _ in ()).throw(RuntimeError('no playwright'))
     sys.modules['fast_flights.fallback_playwright'] = stub
-    from fast_flights import FlightData, Passengers, get_flights
-    r = get_flights(
+    from fast_flights import FlightData, Passengers, TFSData, get_flights_from_filter
+    tfs = TFSData.from_interface(
         flight_data=[FlightData(date=WATCH['out'], from_airport=WATCH['origin'], to_airport=WATCH['dest']),
                      FlightData(date=WATCH['ret'], from_airport=WATCH['dest'], to_airport=WATCH['origin'])],
-        trip='round-trip', seat='economy', passengers=Passengers(adults=WATCH['adults']), fetch_mode='common')
+        trip='round-trip', seat='economy', passengers=Passengers(adults=WATCH['adults']), max_stops=None)
+    r = get_flights_from_filter(tfs, currency='TWD', mode='common')   # GitHub Actions 在美國，不指定會回 USD
     for f in r.flights:
         if f.name == 'China Airlines' and f.stops == 0 and f.departure.startswith(WATCH['out_dep']):
+            if 'NT$' not in f.price:
+                raise RuntimeError(f'幣別不是 TWD: {f.price}')
             digits = ''.join(ch for ch in f.price if ch.isdigit())
             return (int(digits) if digits else None), f'{f.name} {f.departure} {f.price}'
     return None, f'no CI direct among {len(r.flights)} results'

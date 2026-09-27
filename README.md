@@ -40,6 +40,6 @@ SERPAPI_KEY=xxx NTFY_TOPIC=xxx python3 tracker.py
 
 ## seatwatch（釋位監看，2026-09-27 起）
 `seatwatch.py`：查 Google Flights「TPE-TAK 2027/1/23 去 1/29 回、2 大人、只看華航、TWD」。直飛來回報價 < 42,000 ＝ 1/23 CI178 經濟艙釋出 ≥2 位（售完時 Google 改報去程商務 ≈ 49,786）→ 推播（6 小時冷卻）；連續 3 次抓取失敗也推播。
-- **一定在本機跑**（LaunchAgent `com.adam.seatwatch`，每 4 小時，MacBook；venv `.venv/`）：GitHub Actions 在美國，Google 回美國市場舊快取＋USD，實測誤報兩次。
+- **一定在本機跑**（LaunchAgent `com.adam.seatwatch`，每 4 小時，裝在 iMac；venv `.venv/`）：GitHub Actions 在美國，Google 回美國市場舊快取＋USD，實測誤報兩次。
 - 推播走 `.github/workflows/notify.yml`（workflow_dispatch，本機 `gh workflow run` 觸發，用 repo secret NTFY_TOPIC）＋ macOS 通知。
 - 結果寫 `data/seatwatch_local.csv`（不進 git）；log 在 `~/Library/Logs/seatwatch.log`。結案：`launchctl unload -w ~/Library/LaunchAgents/com.adam.seatwatch.plist`。

@@ -1,2 +1,1 @@
 time,id,price_2adults_rt,note,error
-2026-09-27 09:51,ci-tpe-tak-0123,,,ImportError: cannot import name 'FlightData' from 'fast_flights' (/opt/hostedtoolcache/Python/3.12.14/x64/lib/python3.12/site-packages/fast_flights/__init__.py)

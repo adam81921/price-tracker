@@ -1,0 +1,28 @@
+name: notify (ntfy relay)
+
+# 本機 seatwatch.py 透過 `gh workflow run notify.yml -f title=.. -f body=..` 呼叫，
+# 用 repo secret NTFY_TOPIC 推播到 iPhone（本機沒有 topic）。
+on:
+  workflow_dispatch:
+    inputs:
+      title: {description: '標題', required: true, type: string}
+      body:  {description: '內容', required: true, type: string}
+      click: {description: '點擊開啟網址', required: false, type: string, default: ''}
+      tags:  {description: 'ntfy tags', required: false, type: string, default: 'airplane'}
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ntfy
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          TITLE: ${{ inputs.title }}
+          BODY: ${{ inputs.body }}
+          CLICK: ${{ inputs.click }}
+          TAGS: ${{ inputs.tags }}
+        run: |
+          curl -fsS -X POST "https://ntfy.sh/$NTFY_TOPIC" \
+            -H "Title: $TITLE" -H "Tags: $TAGS" -H "Priority: high" \
+            ${CLICK:+-H "Click: $CLICK"} \
+            --data-binary "$BODY" > /dev/null && echo sent

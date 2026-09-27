@@ -1,1 +1,4 @@
 __pycache__/
+.venv/
+data/seatwatch_local.csv
+data/seatwatch_state.json

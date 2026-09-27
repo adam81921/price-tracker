@@ -6,16 +6,19 @@
   - 去程經濟售完      → Google 改報「去程商務＋回程經濟」≈ 49,786
   所以直飛來回價 < THRESHOLD 就代表 1/23 經濟艙釋出 ≥2 位（1 大 1 小一定買得到）。
   ※ Google 對「含兒童」的華航查詢不回報價，所以用 2 大人當代理指標。
-資料源：fast-flights（免 API 金鑰）。推播：ntfy（NTFY_TOPIC）。
-每次結果寫 data/seatwatch.csv；連續失敗 3 次推播提醒；找到位子後每次都推（有 6 小時冷卻）。
+資料源：fast-flights（免 API 金鑰）。**必須在台灣 IP 跑**（GitHub Actions 在美國：Google 回美國市場
+  的舊快取＋USD，實測會誤報），所以由本機 LaunchAgent `com.adam.seatwatch` 每 4 小時執行。
+推播：本機沒有 ntfy topic → `gh workflow run notify.yml` 讓 GitHub 用 secret 發 ntfy；另外 macOS 通知一份。
+每次結果寫 data/seatwatch_local.csv（不進 git）；連續失敗 3 次推播提醒；找到位子後每次都推（6 小時冷卻）。
 """
-import csv, datetime, json, os, sys, types, urllib.request
+import csv, datetime, json, os, subprocess, sys, types
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(ROOT, 'data')
-CSV_PATH = os.path.join(DATA, 'seatwatch.csv')
+CSV_PATH = os.path.join(DATA, 'seatwatch_local.csv')
 STATE_PATH = os.path.join(DATA, 'seatwatch_state.json')
-NTFY_TOPIC = os.environ.get('NTFY_TOPIC', '').strip()
+REPO = 'adam81921/price-tracker'
+GH = '/opt/homebrew/bin/gh'
 TW = datetime.timezone(datetime.timedelta(hours=8))
 NOW = datetime.datetime.now(TW)
 
@@ -31,14 +34,19 @@ def log(*a):
 
 
 def ntfy(title, body, tags='airplane'):
-    if not NTFY_TOPIC:
-        log('(NTFY_TOPIC 未設，略過推播)', title, body)
-        return
-    req = urllib.request.Request('https://ntfy.sh/' + NTFY_TOPIC, data=body.encode(), method='POST')
-    req.add_header('Title', title.encode()); req.add_header('Tags', tags)
-    req.add_header('Priority', 'high'); req.add_header('Click', WATCH['click'])
-    urllib.request.urlopen(req, timeout=30)
-    log('已推播:', title)
+    """透過 GitHub notify.yml 轉發 ntfy（secret 在 repo），並發 macOS 通知。"""
+    try:
+        subprocess.run(['osascript', '-e', f'display notification "{body[:200]}" with title "{title}" sound name "Glass"'],
+                       timeout=15, check=False)
+    except Exception as e:
+        log('macOS 通知失敗:', e)
+    r = subprocess.run([GH, 'workflow', 'run', 'notify.yml', '-R', REPO,
+                        '-f', f'title={title}', '-f', f'body={body}', '-f', f'click={WATCH["click"]}', '-f', f'tags={tags}'],
+                       capture_output=True, text=True, timeout=60)
+    if r.returncode == 0:
+        log('已推播(via GitHub):', title)
+    else:
+        log('推播失敗:', r.stderr.strip()[:200])
 
 
 def fetch_direct_price():

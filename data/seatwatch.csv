@@ -1,2 +1,1 @@
 time,id,price_2adults_rt,note,error
-2026-09-27 09:51,ci-tpe-tak-0123,,,ModuleNotFoundError: No module named 'typing_extensions'

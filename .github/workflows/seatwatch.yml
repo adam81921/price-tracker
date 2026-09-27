@@ -20,7 +20,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install -q fast-flights
+      - run: pip install -q fast-flights typing_extensions
       - name: Run seatwatch
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}

@@ -1,0 +1,35 @@
+name: seatwatch CI TPE-TAK 0123
+
+on:
+  schedule:
+    - cron: '0 */4 * * *'   # 每 4 小時（台北 00/04/08/12/16/20）
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seatwatch
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -q fast-flights
+      - name: Run seatwatch
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: python3 seatwatch.py
+      - name: Commit data
+        run: |
+          git config user.name "price-tracker-bot"
+          git config user.email "actions@github.com"
+          git add data/seatwatch.csv data/seatwatch_state.json
+          git diff --cached --quiet && exit 0
+          git commit -m "seatwatch: $(TZ=Asia/Taipei date '+%F %H:%M')"
+          for i in 1 2 3; do git pull --rebase -q && git push && break; sleep 5; done

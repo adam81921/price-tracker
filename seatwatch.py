@@ -9,7 +9,8 @@
 資料源：fast-flights（免 API 金鑰）。**必須在台灣 IP 跑**（GitHub Actions 在美國：Google 回美國市場
   的舊快取＋USD，實測會誤報），所以由本機 LaunchAgent `com.adam.seatwatch` 每 4 小時執行。
 推播：本機沒有 ntfy topic → `gh workflow run notify.yml` 讓 GitHub 用 secret 發 ntfy；另外 macOS 通知一份。
-每次結果寫 data/seatwatch_local.csv（不進 git）；連續失敗 3 次推播提醒；找到位子後每次都推（6 小時冷卻）。
+每次結果寫 data/seatwatch_local.csv（不進 git）。**每次執行都推一則**（使用者要求，才能分辨「沒票」和「推播壞掉」）：
+  有位＝high 優先（響鈴）／仍售完＝low 優先（靜音）／抓取失敗＝default。
 """
 import csv, datetime, json, os, subprocess, sys, types
 
@@ -33,7 +34,7 @@ def log(*a):
     print('[seatwatch]', *a, flush=True)
 
 
-def ntfy(title, body, tags='airplane'):
+def ntfy(title, body, tags='airplane', priority='high'):
     """透過 GitHub notify.yml 轉發 ntfy（secret 在 repo），並發 macOS 通知。"""
     try:
         subprocess.run(['osascript', '-e', f'display notification "{body[:200]}" with title "{title}" sound name "Glass"'],
@@ -41,7 +42,7 @@ def ntfy(title, body, tags='airplane'):
     except Exception as e:
         log('macOS 通知失敗:', e)
     r = subprocess.run([GH, 'workflow', 'run', 'notify.yml', '-R', REPO,
-                        '-f', f'title={title}', '-f', f'body={body}', '-f', f'click={WATCH["click"]}', '-f', f'tags={tags}'],
+                        '-f', f'title={title}', '-f', f'body={body}', '-f', f'click={WATCH["click"]}', '-f', f'tags={tags}', '-f', f'priority={priority}'],
                        capture_output=True, text=True, timeout=60)
     if r.returncode == 0:
         log('已推播(via GitHub):', title)
@@ -92,21 +93,22 @@ def main():
 
     if err:
         state['fails'] = state.get('fails', 0) + 1
-        if state['fails'] == FAIL_ALERT_AFTER:
-            ntfy('⚠️ 高松釋位監看連續失敗', f'{FAIL_ALERT_AFTER} 次抓不到 Google 航班資料，最後錯誤：{err[:150]}', tags='warning')
+        ntfy('⚠️ 高松釋位監看抓取失敗', f'第 {state["fails"]} 次連續失敗：{err[:150]}', tags='warning', priority='default')
     else:
         state['fails'] = 0
         state['last_price'] = price
         state['last_ok'] = ts
         if price is not None and price < WATCH['threshold']:
-            last = state.get('last_found_alert')
-            cool = last and (NOW - datetime.datetime.fromisoformat(last)).total_seconds() < FOUND_COOLDOWN_H * 3600
-            if not cool:
-                per = price // 2
-                ntfy('✈️ 1/23 華航高松經濟艙有位了！',
-                     f'Google 顯示 2 大人來回經濟艙 {price:,}（每人約 {per:,}），1/23 CI178 去程經濟艙已釋出 ≥2 位，'
-                     f'快去華航 App/官網用「1 大 1 小」下單。', tags='tada')
-                state['last_found_alert'] = NOW.isoformat()
+            per = price // 2
+            ntfy('✈️ 1/23 華航高松經濟艙有位了！',
+                 f'Google 顯示 2 大人來回經濟艙 {price:,}（每人約 {per:,}），1/23 CI178 去程經濟艙已釋出 ≥2 位，'
+                 f'快去華航 App 用「1 大 1 小」下單。', tags='tada', priority='high')
+            state['last_found_alert'] = NOW.isoformat()
+        elif price is None:
+            ntfy('⚠️ 高松釋位監看：Google 沒列出華航直飛', note[:150], tags='warning', priority='default')
+        else:
+            ntfy('😴 1/23 高松經濟艙仍售完', f'{ts} 查：2 大人來回 {price:,}（去程仍商務）。下次 4 小時後。',
+                 tags='zzz', priority='low')
     json.dump(state, open(STATE_PATH, 'w'), ensure_ascii=False, indent=2)
 
 

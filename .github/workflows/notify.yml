@@ -9,6 +9,7 @@ on:
       body:  {description: '內容', required: true, type: string}
       click: {description: '點擊開啟網址', required: false, type: string, default: ''}
       tags:  {description: 'ntfy tags', required: false, type: string, default: 'airplane'}
+      priority: {description: 'ntfy priority (min/low/default/high/urgent)', required: false, type: string, default: 'high'}
 
 jobs:
   send:
@@ -21,8 +22,9 @@ jobs:
           BODY: ${{ inputs.body }}
           CLICK: ${{ inputs.click }}
           TAGS: ${{ inputs.tags }}
+          PRIORITY: ${{ inputs.priority }}
         run: |
           curl -fsS -X POST "https://ntfy.sh/$NTFY_TOPIC" \
-            -H "Title: $TITLE" -H "Tags: $TAGS" -H "Priority: high" \
+            -H "Title: $TITLE" -H "Tags: $TAGS" -H "Priority: $PRIORITY" \
             ${CLICK:+-H "Click: $CLICK"} \
             --data-binary "$BODY" > /dev/null && echo sent
